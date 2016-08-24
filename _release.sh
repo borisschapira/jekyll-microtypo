@@ -8,4 +8,6 @@ else
   release_type="$@"
 fi
 
+# gem build jekyll-microtypo.gemspec
+
 gem bump --version "$release_type" --tag --release
