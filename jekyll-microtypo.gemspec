@@ -3,7 +3,7 @@ require "jekyll/microtypo/version"
 
 Gem::Specification.new do |spec|
   spec.version = Jekyll::Microtypo::VERSION
-  spec.homepage = "https://github.com/borisschapira/jekyll-microtypo"
+  spec.homepage = "https://borisschapira.github.io/jekyll-microtypo/"
   spec.authors = ["Boris Schapira"]
   spec.email = ["contact@borisschapira.com"]
   spec.files = %W(Rakefile Gemfile README.md LICENSE) + Dir["lib/**/*"]
