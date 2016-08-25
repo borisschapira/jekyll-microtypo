@@ -25,8 +25,8 @@ module Jekyll
                     input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
 
                     # Guillemets à la française
-                    input.gsub!(/&ldquo;|“/, '«&#8239;'.freeze)
-                    input.gsub!(/&rdquo;|”/, '&#8239;»'.freeze)
+                    input.gsub!(/(&ldquo;|“|«)\s*/, '«&#8239;'.freeze)
+                    input.gsub!(/\s*(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
                     # Special punctuation
                     input.gsub!(/ \?\!([^\w]|$)/, '&#8239;&#8264;\1'.freeze)
@@ -39,10 +39,16 @@ module Jekyll
                     input.gsub!(/ (%|;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
 
                     # non-breaking space
-                    input.gsub!(/ :/, '&nbsp;:'.freeze)
+                    input.gsub!(' :'.freeze, '&nbsp;:'.freeze)
 
                     # Currencies
                     input.gsub!(/(\d+)\s*($|€)/, '\1&nbsp;\2'.freeze)
+
+                    # nbsp after middle dash (dialogs)
+                    input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
+
+                    # Times
+                    input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
 
                 elsif locale == 'en_US'
 
@@ -50,24 +56,18 @@ module Jekyll
                     input.gsub!(/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2'.freeze)
 
                     # Currencies
-                    input.gsub!(/($|€)\s*(\d+)/, '\1&nbsp;\2'.freeze)
+                    input.gsub!(/($|€)\s*(\d+)/, '\1\2'.freeze)
 
                 end
 
-                # nbsp after middle dash
-                input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
-
                 # Elipsis
                 input.gsub!('...', '&#8230;'.freeze)
-
-                # Times
-                input.gsub!('(\s)+(\d+)(\s)?x(\s)?(?=\d)', '\1\2\3&times;\3'.freeze)
 
                 arrayResponse.push input
             end
 
             # Clean empty lines
-            arrayResponse.join.gsub(/\A\s*\n$/, '')
+            arrayResponse.join.gsub(/\A\s*\n$/, ''.freeze)
         end
     end
 end
