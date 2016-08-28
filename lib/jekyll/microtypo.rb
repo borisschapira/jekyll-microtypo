@@ -25,8 +25,8 @@ module Jekyll
                     input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
 
                     # Guillemets à la française
-                    input.gsub!(/(&ldquo;|“|«)\s*/, '«&#8239;'.freeze)
-                    input.gsub!(/\s*(&rdquo;|”|»)/, '&#8239;»'.freeze)
+                    input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
+                    input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
                     # Special punctuation
                     input.gsub!(/ \?\!([^\w]|$)/, '&#8239;&#8264;\1'.freeze)
