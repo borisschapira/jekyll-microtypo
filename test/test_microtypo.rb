@@ -5,9 +5,9 @@ require 'jekyll/microtypo'
 include Jekyll::Microtypo
 
 class MicrotypoTest < Minitest::Test
-	def test_all__pre_br
-		assert_equal "Before <pre><code>One<br />\nTwo</code></pre> After", Jekyll::Microtypo.microtypo("Before <pre><code>One\nTwo</code></pre> After")
-		assert_equal "Avant <pre><code>One<br />\nTwo</code></pre> Après", Jekyll::Microtypo.microtypo("Avant <pre><code>One\nTwo</code></pre> Après")
+	def test_all__comment
+		assert_equal "Before One ! After", Jekyll::Microtypo.microtypo("Before <!-- nomicrotypo -->One !<!-- endnomicrotypo --> After")
+		assert_equal "Avant Hey! Après", Jekyll::Microtypo.microtypo("Avant <!-- nomicrotypo -->Hey!<!-- endnomicrotypo --> Après")
 	end
 	def test_all__pre_script_nofix
 		assert_equal 'A!<pre>B !</pre> C!<script>D !</script> E!', Jekyll::Microtypo.microtypo('A !<pre>B !</pre> C !<script>D !</script> E !')

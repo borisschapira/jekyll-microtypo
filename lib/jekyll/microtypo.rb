@@ -19,65 +19,75 @@ module Jekyll
                 end
                 input = endPreArray.last
 
-                # <script></script> management
-                scriptArray = input.to_s.split('<script'.freeze)
-                scriptArray.each do |input|
-                    endScriptArray = input.to_s.split('</script>'.freeze)
-                    if endScriptArray.size == 2
-                        arrayResponse.push('<script'.freeze)
-                        arrayResponse.push(endScriptArray.first)
-                        arrayResponse.push('</script>'.freeze)
+                # <!-- nomicrotypo --><!-- endnomicrotypo --> management
+                noFixCommentArray = input.to_s.split('<!-- nomicrotypo -->'.freeze)
+                noFixCommentArray.each do |input|
+                    endNoFixCommentArray = input.to_s.split('<!-- endnomicrotypo -->'.freeze)
+                    if endNoFixCommentArray.size == 2
+                        arrayResponse.push(endNoFixCommentArray.first)
                     end
-                    input = endScriptArray.last
+                    input = endNoFixCommentArray.last
 
-                    if locale == 'fr_FR'
+                    # <script></script> management
+                    scriptArray = input.to_s.split('<script'.freeze)
+                    scriptArray.each do |input|
+                        endScriptArray = input.to_s.split('</script>'.freeze)
+                        if endScriptArray.size == 2
+                            arrayResponse.push('<script'.freeze)
+                            arrayResponse.push(endScriptArray.first)
+                            arrayResponse.push('</script>'.freeze)
+                        end
+                        input = endScriptArray.last
 
-                        # 1er, 3ème, 4ème…
-                        input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
+                        if locale == 'fr_FR'
 
-                        # Guillemets à la française
-                        input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
-                        input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
+                            # 1er, 3ème, 4ème…
+                            input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
 
-                        # Special punctuation
-                        input.gsub!(/ \?\!([^\w]|$)/, '&#8239;&#8264;\1'.freeze)
-                        input.gsub!(/ \!\?([^\w]|$)/, '&#8239;&#8265;\1'.freeze)
-                        input.gsub!(/ \!\!\!([^\w]|$)/, '&#8239;&#8252;\1'.freeze)
-                        input.gsub!(/ \!\!([^\w]|$)/, '&#8239;&#8252;\1'.freeze)
+                            # Guillemets à la française
+                            input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
+                            input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
-                        # Thin non-breaking space before '%', ';', '!', '?', 'px'
-                        input.gsub!(/(\s)+(\d+)(\s)?(px|%)(\s|.)/, '\1\2&#8239;\4\5'.freeze)
-                        input.gsub!(/ (%|;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
+                            # Special punctuation
+                            input.gsub!(/ \?\!([^\w]|$)/, '&#8239;&#8264;\1'.freeze)
+                            input.gsub!(/ \!\?([^\w]|$)/, '&#8239;&#8265;\1'.freeze)
+                            input.gsub!(/ \!\!\!([^\w]|$)/, '&#8239;&#8252;\1'.freeze)
+                            input.gsub!(/ \!\!([^\w]|$)/, '&#8239;&#8252;\1'.freeze)
 
-                        # non-breaking space
-                        input.gsub!(' :'.freeze, '&nbsp;:'.freeze)
+                            # Thin non-breaking space before '%', ';', '!', '?', 'px'
+                            input.gsub!(/(\s)+(\d+)(\s)?(px|%)(\s|.)/, '\1\2&#8239;\4\5'.freeze)
+                            input.gsub!(/ (%|;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
 
-                        # Currencies
-                        input.gsub!(/(\d+)\s*($|€)/, '\1&nbsp;\2'.freeze)
+                            # non-breaking space
+                            input.gsub!(' :'.freeze, '&nbsp;:'.freeze)
 
-                        # nbsp after middle dash (dialogs)
-                        input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
+                            # Currencies
+                            input.gsub!(/(\d+)\s*($|€)/, '\1&nbsp;\2'.freeze)
 
-                        # Times
-                        input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
+                            # nbsp after middle dash (dialogs)
+                            input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
 
-                    elsif locale == 'en_US'
+                            # Times
+                            input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
 
-                        # Remove useless spaces
-                        input.gsub!(/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2'.freeze)
+                        elsif locale == 'en_US'
 
-                        # Currencies
-                        input.gsub!(/($|€)\s*(\d+)/, '\1\2'.freeze)
+                            # Remove useless spaces
+                            input.gsub!(/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2'.freeze)
 
+                            # Currencies
+                            input.gsub!(/($|€)\s*(\d+)/, '\1\2'.freeze)
+
+                        end
+
+                        # Elipsis
+                        input.gsub!('...', '&#8230;'.freeze)
+
+                        arrayResponse.push input
                     end
-
-                    # Elipsis
-                    input.gsub!('...', '&#8230;'.freeze)
-
-                    arrayResponse.push input
                 end
             end
-    
+
             # Clean empty lines
             arrayResponse.join.gsub(/\A\s*\n$/, ''.freeze)
         end
