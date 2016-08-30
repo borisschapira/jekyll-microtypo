@@ -14,7 +14,7 @@ module Jekyll
                 endPreArray = input.to_s.split('</pre>'.freeze)
                 if endPreArray.size == 2
                     arrayResponse.push('<pre'.freeze)
-                    arrayResponse.push(endPreArray.first.gsub(/\n/, "<br />\n".freeze))
+                    arrayResponse.push(endPreArray.first)
                     arrayResponse.push('</pre>'.freeze)
                 end
                 input = endPreArray.last
