@@ -1,97 +1,110 @@
 module Jekyll
-    module Microtypo
-        # Example:
-        #   {{ content | microtypo: "fr_FR" }}
-        def microtypo(input, locale = nil)
-            locale = 'en_US'.freeze unless locale
+  module Microtypo
+    # Example:
+    #   {{ content | microtypo: "fr_FR" }}
+    def microtypo(input, locale = nil)
 
-            arrayResponse = []
+      settings = Jekyll.configuration({})['microtypo'] || {}
+      settings['median'] ||= false
 
-            # <pre></pre> management
-            # Replace \n in <pre> by <br />\n in order to keep line break visualy
-            preArray = input.to_s.split('<pre'.freeze)
-            preArray.each do |input|
-                endPreArray = input.to_s.split('</pre>'.freeze)
-                if endPreArray.size == 2
-                    arrayResponse.push('<pre'.freeze)
-                    arrayResponse.push(endPreArray.first)
-                    arrayResponse.push('</pre>'.freeze)
-                end
-                input = endPreArray.last
+      locale = 'en_US'.freeze unless locale
 
-                # <!-- nomicrotypo --><!-- endnomicrotypo --> management
-                noFixCommentArray = input.to_s.split('<!-- nomicrotypo -->'.freeze)
-                noFixCommentArray.each do |input|
-                    endNoFixCommentArray = input.to_s.split('<!-- endnomicrotypo -->'.freeze)
-                    if endNoFixCommentArray.size == 2
-                        arrayResponse.push(endNoFixCommentArray.first)
-                    end
-                    input = endNoFixCommentArray.last
+      array_response = []
 
-                    # <script></script> management
-                    scriptArray = input.to_s.split('<script'.freeze)
-                    scriptArray.each do |input|
-                        endScriptArray = input.to_s.split('</script>'.freeze)
-                        if endScriptArray.size == 2
-                            arrayResponse.push('<script'.freeze)
-                            arrayResponse.push(endScriptArray.first)
-                            arrayResponse.push('</script>'.freeze)
-                        end
-                        input = endScriptArray.last
+      # <pre></pre> management
+      # Replace \n in <pre> by <br />\n in order to keep line break visualy
+      pre_array = input.to_s.split('<pre'.freeze)
+      pre_array.each do |input|
+        end_pre_array = input.to_s.split('</pre>'.freeze)
+        if end_pre_array.size == 2
+          array_response.push('<pre'.freeze)
+          array_response.push(end_pre_array.first)
+          array_response.push('</pre>'.freeze)
+        end
+        input = end_pre_array.last
 
-                        if locale == 'fr_FR'
+        # <!-- nomicrotypo --><!-- endnomicrotypo --> management
+        no_fix_comment_array = input.to_s.split('<!-- nomicrotypo -->'.freeze)
+        no_fix_comment_array.each do |input|
+          endno_fix_comment_array = input.to_s.split('<!-- endnomicrotypo -->'.freeze)
+          if endno_fix_comment_array.size == 2
+            array_response.push(endno_fix_comment_array.first)
+          end
+          input = endno_fix_comment_array.last
 
-                            # 1er, 3ème, 4ème…
-                            input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
+          # <script></script> management
+          script_array = input.to_s.split('<script'.freeze)
+          script_array.each do |input|
+            end_script_array = input.to_s.split('</script>'.freeze)
+            if end_script_array.size == 2
+              array_response.push('<script'.freeze)
+              array_response.push(end_script_array.first)
+              array_response.push('</script>'.freeze)
+            end
+            input = end_script_array.last
 
-                            # Guillemets à la française
-                            input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
-                            input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
+            if locale == 'fr_FR'
 
-                            # Special punctuation
-                            input.gsub!(/ \?\!([^\w]|$)/, '&#8239;&#8264;\1'.freeze)
-                            input.gsub!(/ \!\?([^\w]|$)/, '&#8239;&#8265;\1'.freeze)
-                            input.gsub!(/ \!\!\!([^\w]|$)/, '&#8239;&#8252;\1'.freeze)
-                            input.gsub!(/ \!\!([^\w]|$)/, '&#8239;&#8252;\1'.freeze)
+              # Ordinals
+              input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
 
-                            # Thin non-breaking space before '%', ';', '!', '?', 'px'
-                            input.gsub!(/(\s)+(\d+)(\s)?(px|%)(\s|.)/, '\1\2&#8239;\4\5'.freeze)
-                            input.gsub!(/ (%|;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
+              # Num
+              input.gsub!(/n°\s*(\d)/, 'n<sup>o</sup>&#8239;\1'.freeze)
 
-                            # non-breaking space
-                            input.gsub!(' :'.freeze, '&nbsp;:'.freeze)
+              # French Guillemets
+              input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
+              input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
-                            # Currencies
-                            input.gsub!(/(\d+)\s*($|€)/, '\1&nbsp;\2'.freeze)
+              # Point median
 
-                            # nbsp after middle dash (dialogs)
-                            input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
+              if settings['median'] == true
+                input.gsub!(/(\p{L}+)(·\p{L}+)((·)(\p{L}+))?/, '\1<span aria-hidden="true">\2\4</span>\5'.freeze)
+              end
 
-                            # Times
-                            input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
+              # Special punctuation
+              input.gsub!(/(\s)+\?\!([^\w]|$)/, '&#8239;&#8264;\2'.freeze)
+              input.gsub!(/(\s)+\!\?([^\w]|$)/, '&#8239;&#8265;\2'.freeze)
+              input.gsub!(/(\s)+\!\!\!([^\w]|$)/, '&#8239;&#8252;\2'.freeze)
+              input.gsub!(/(\s)+\!\!([^\w]|$)/, '&#8239;&#8252;\2'.freeze)
 
-                        elsif locale == 'en_US'
+              # Thin non-breaking space before '%', ';', '!', '?', 'px'
+              input.gsub!(/(\s)+(\d+)(\s)?(px|%)(\s|.)/, '\1\2&#8239;\4\5'.freeze)
+              input.gsub!(/ (%|;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
 
-                            # Remove useless spaces
-                            input.gsub!(/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2'.freeze)
+              # non-breaking space
+              input.gsub!(' :'.freeze, '&nbsp;:'.freeze)
 
-                            # Currencies
-                            input.gsub!(/($|€)\s*(\d+)/, '\1\2'.freeze)
+              # Currencies
+              input.gsub!(/(\d+)\s*($|€)/, '\1&nbsp;\2'.freeze)
 
-                        end
+              # nbsp after middle dash (dialogs)
+              input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
 
-                        # Elipsis
-                        input.gsub!('...', '&#8230;'.freeze)
+              # Times
+              input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
 
-                        arrayResponse.push input
-                    end
-                end
+            elsif locale == 'en_US'
+
+              # Remove useless spaces
+              input.gsub!(/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2'.freeze)
+
+              # Currencies
+              input.gsub!(/($|€)\s*(\d+)/, '\1\2'.freeze)
+
             end
 
-            # Clean empty lines
-            arrayResponse.join.gsub(/\A\s*\n$/, ''.freeze)
+            # Elipsis
+            input.gsub!('...', '&#8230;'.freeze)
+
+            array_response.push input
+          end
         end
+      end
+
+      # Clean empty lines
+      array_response.join.gsub(/\A\s*\n$/, ''.freeze)
     end
+  end
 end
 
 Liquid::Template.register_filter(Jekyll::Microtypo)
