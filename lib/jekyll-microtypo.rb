@@ -1,1 +1,1 @@
-require "jekyll/microtypo"
+require 'jekyll/microtypo'
