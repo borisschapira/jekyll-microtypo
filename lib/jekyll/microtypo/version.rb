@@ -1,5 +1,5 @@
 module Jekyll
   module Microtypo
-    VERSION = "0.0.8".freeze
+    VERSION = "0.0.9".freeze
   end
 end
