@@ -6,7 +6,6 @@ require 'jekyll/microtypo'
 include Jekyll::Microtypo
 
 class MicrotypoTest < Minitest::Test
-
   def test_all__comment
     assert_equal 'Before One ! After', Jekyll::Microtypo.microtypo('Before <!-- nomicrotypo -->One !<!-- endnomicrotypo --> After')
     assert_equal 'Avant Hey! Après', Jekyll::Microtypo.microtypo('Avant <!-- nomicrotypo -->Hey!<!-- endnomicrotypo --> Après')
@@ -33,12 +32,12 @@ class MicrotypoTest < Minitest::Test
 
   def test_fr_fr__median_point_plural_setting
     # test when microtypo.median = true
-    assert_equal 'Il<span aria-hidden="true">·Elle</span> est intéressé<span aria-hidden="true">·e</span>.', Jekyll::Microtypo.microtypo('Il·Elle est intéressé·e.', 'fr_FR')
+    assert_equal 'Il<span aria-hidden="true">·Elle</span> est intéressé<span aria-hidden="true">·e</span>.', Jekyll::Microtypo.microtypo('Il·Elle est intéressé·e.', 'fr_FR', {"median" => true})
   end
 
   def test_fr_fr__median_point_setting
     # test when microtypo.median = true
-    assert_equal 'Ils<span aria-hidden="true">·Elles</span> sont intéressé<span aria-hidden="true">·e·</span>s', Jekyll::Microtypo.microtypo('Ils·Elles sont intéressé·e·s', 'fr_FR')
+    assert_equal 'Ils<span aria-hidden="true">·Elles</span> sont intéressé<span aria-hidden="true">·e·</span>s', Jekyll::Microtypo.microtypo('Ils·Elles sont intéressé·e·s', 'fr_FR', {"median" => true})
   end
 
   def test_fr_fr__num

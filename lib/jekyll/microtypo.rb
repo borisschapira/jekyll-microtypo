@@ -1,13 +1,23 @@
 module Jekyll
   module Microtypo
+    @@settings = []
+
+    def get_settings
+      if @@settings.none?
+        @@settings = Jekyll.configuration({})['microtypo'] || {}
+      end
+      @@settings
+    end
+
     # Example:
     #   {{ content | microtypo: "fr_FR" }}
-    def microtypo(input, locale = nil)
-
-      settings = Jekyll.configuration({})['microtypo'] || {}
+    def microtypo(input, locale = nil, settings = {})
+      if settings.none?
+        settings = get_settings
+      end
       settings['median'] ||= false
 
-      locale = 'en_US'.freeze unless locale
+      locale ||= 'en_US'.freeze
 
       array_response = []
 
@@ -103,8 +113,8 @@ module Jekyll
 
       # Clean empty lines
       array_response.join.gsub(/\A\s*\n$/, ''.freeze)
-    end
   end
-end
+  end
+  end
 
 Liquid::Template.register_filter(Jekyll::Microtypo)
