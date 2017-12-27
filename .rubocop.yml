@@ -1,0 +1,23 @@
+inherit_gem:
+  jekyll: .rubocop.yml
+
+AllCops:
+  TargetRubyVersion: 2.1
+  Include:
+    - lib/**/*.rb
+    - test/*.rb
+    - Gemfile
+    - Rakefile
+    - jekyll-microtypo.gemspec
+
+  Exclude:
+    - .gitignore
+    - .rubocop.yml
+    - Gemfile.lock
+    - LICENSE
+    - README.md
+    - vendor/**/*
+
+Metrics/LineLength:
+  Exclude:
+    - test/*.rb
