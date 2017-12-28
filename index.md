@@ -100,7 +100,7 @@ This content will be fixed.
 
 ## Français
 
-`jekyll-microtypo` est un plugin [Jekyll](http://jekyllrb.com/) qui permet de corriger la microtypographie de contenus rédigées en anglais ou en français.
+`jekyll-microtypo` est un plugin [Jekyll](http://jekyllrb.com/) qui permet de corriger la microtypographie de contenus rédigés en anglais ou en français.
 
 Il fournit un nouveau filtre qui prend en paramètre la locale du texte à corriger:
 
