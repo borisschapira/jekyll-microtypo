@@ -1,6 +1,0 @@
-{
-  "name": "Jekyll-Microtypo",
-  "tagline": "A jekyll plugin to improve microtypography",
-  "body": "[![Gem Version](https://badge.fury.io/rb/jekyll-microtypo.svg)](https://badge.fury.io/rb/jekyll-microtypo)\r\n[![Gem Downloads](https://img.shields.io/gem/dt/jekyll-microtypo.svg?style=flat)](http://rubygems.org/gems/jekyll-microtypo)\r\n\r\n`jekyll-microtypo` is a [Jekyll](http://jekyllrb.com/) plugin that attempts to fix microtypography for french and english languages.\r\n",
-  "note": "Don't delete this file! It's used internally to help with page regeneration."
-}
