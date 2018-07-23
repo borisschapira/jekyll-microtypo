@@ -63,6 +63,11 @@ class MicrotypoTest < Minitest::Test
     assert_equal "Il compta jusqu’à trois ‘Missisipi’ puis dit&nbsp;: «&#8239;Tu devrais ‘danser', maintenant&#8239;».", Jekyll::Microtypo.microtypo("Il compta jusqu'à trois 'Missisipi' puis dit : “Tu devrais 'danser', maintenant”.", "fr_FR")
   end
 
+  def test_fr_fr__timing_single_quotes
+    # test when microtypo.median = false
+    assert_equal "Il couru 23’’4’.", Jekyll::Microtypo.microtypo("Il couru 23''4'.", "fr_FR")
+  end
+
   def test_fr_fr__apostrophe
     assert_equal "L’événement démarrera dans trois minutes.", Jekyll::Microtypo.microtypo("L'événement démarrera dans trois minutes.", "fr_FR")
   end
@@ -84,7 +89,7 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_en_us__removespaces
-    assert_equal "So: what are you thinking? Either you're in at 100% or you're out.", Jekyll::Microtypo.microtypo("So : what are you thinking ? Either you're in at 100 % or you're out.", "en_US")
+    assert_equal "So: what are you thinking? Either you’re in at 100% or you’re out.", Jekyll::Microtypo.microtypo("So : what are you thinking ? Either you're in at 100 % or you're out.", "en_US")
   end
 
   def test_en_us__currencies

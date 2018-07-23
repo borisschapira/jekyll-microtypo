@@ -65,13 +65,6 @@ module Jekyll
               input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
               input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
-              # single quotes
-              input.gsub!(/(\s)'([[:alpha:]])/, '\1‘\2'.freeze)
-              input.gsub!(/([[:alpha:]])'(\s)/, '\1’\2'.freeze)
-
-              # Apostrophe
-              input.gsub!(/([[:alpha:]])'([[:alpha:]])/, '\1’\2'.freeze)
-
               # Point median
 
               if settings['median'] == true
@@ -109,6 +102,15 @@ module Jekyll
               input.gsub!(/($|€)\s*(\d+)/, '\1\2'.freeze)
 
             end
+
+            # single quotes
+            input.gsub!(/(\s)'([[:alpha:]])/, '\1‘\2'.freeze)
+            input.gsub!(/([[:alpha:]])'(\s)/, '\1’\2'.freeze)
+            input.gsub!(/(\d)''/, '\1’’'.freeze)
+            input.gsub!(/(\d)'/, '\1’'.freeze)
+
+            # Apostrophe
+            input.gsub!(/([[:alpha:]])'([[:alpha:]])/, '\1’\2'.freeze)
 
             # Elipsis
             input.gsub!('...', '&#8230;'.freeze)

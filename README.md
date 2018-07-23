@@ -5,18 +5,20 @@
 
 ## Table of contents / Table des matières
 
-- [English](#english)
-  - [en_US fixings](#en_us-fixings)
-  - [Installation](#installation)
-  - [Global use](#global-use)
-  - [Configuration](#configuration)
-  - [Ignore code sections](#ignore-code-sections)
-- [Français](#fran%C3%A7ais)
-  - [Corrections fr_FR](#corrections-fr_fr)
-  - [Installation](#installation-1)
-  - [Utilisation générique](#utilisation-g%C3%A9n%C3%A9rique)
-  - [Configuration](#configuration-1)
-  - [Ignorer des portions de code](#ignorer-des-portions-de-code)
+- [Jekyll microtypo plugin tag](#jekyll-microtypo-plugin-tag)
+  - [Table of contents / Table des matières](#table-of-contents--table-des-mati%C3%A8res)
+  - [English](#english)
+    - [en_US fixings](#enus-fixings)
+    - [Installation](#installation)
+    - [Global use](#global-use)
+    - [Configuration](#configuration)
+    - [Ignore code sections](#ignore-code-sections)
+  - [Français](#fran%C3%A7ais)
+    - [Corrections fr_FR](#corrections-frfr)
+    - [Installation](#installation)
+    - [Utilisation générique](#utilisation-g%C3%A9n%C3%A9rique)
+    - [Configuration](#configuration)
+    - [Ignorer des portions de code](#ignorer-des-portions-de-code)
 
 ## English
 
@@ -33,6 +35,7 @@ For the moment, `jekyll-microtypo` only sypports fr_FR and en_US.
 ### en_US fixings
 
 - Removal of unnecessary spaces before certain punctuation marks
+- Use of opening and closing single quotation marks
 - Removing unnecessary spaces between amount and currency
 - Replacement of "..." with "..."
 
@@ -117,6 +120,7 @@ Pour le moment, `jekyll-microtypo` ne supporte que fr_FR et en_US.
 - Remplacement des ordinnaux "1er, 2e" par "1<sup>er</sup>, 2<sup>e</sup>"
 - Remplacement de "n°3" par "n<sup>o</sup>&#8239;3"
 - Utilisation des guillemets à la français
+- Utilisation des guillemets simples ouvrants et fermants
 - Remplacement des pontuations spéciales "?!", "!?", "!!" par les signes adaptés "&#8264;", "&#8265;", "&#8252;"
 - Ajout d'une espace insécable ou fine insécable devant les signes de ponctuation qui le nécessitent
 - Remplacement de l'espace entre des chiffres et certaines unités par une espace fine insécable (attention, l'espace doit être présente à l'origine)
