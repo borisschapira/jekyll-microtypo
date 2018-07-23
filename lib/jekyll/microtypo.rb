@@ -65,6 +65,10 @@ module Jekyll
               input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
               input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
+              # single quotes
+              input.gsub!(/(\s)'([[:alpha:]])/, '\1‘\2'.freeze)
+              input.gsub!(/([[:alpha:]])'(\s)/, '\1’\2'.freeze)
+
               # Apostrophe
               input.gsub!(/([[:alpha:]])'([[:alpha:]])/, '\1’\2'.freeze)
 
