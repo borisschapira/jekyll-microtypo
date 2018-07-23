@@ -58,12 +58,16 @@ class MicrotypoTest < Minitest::Test
     assert_equal "On dit «&#8239;en Avignon&#8239;», pas «&#8239;à Avignon&#8239;». Ah, comme dans «&#8239;en Carmélie&#8239;» alors.", Jekyll::Microtypo.microtypo("On dit &ldquo;en Avignon&rdquo;, pas “à Avignon”. Ah, comme dans «&nbsp;en Carmélie » alors.", "fr_FR")
   end
 
+  def test_fr_fr__apostrophe
+    assert_equal "L’événement démarrera dans trois minutes.", Jekyll::Microtypo.microtypo("L'événement démarrera dans trois minutes.", "fr_FR")
+  end
+
   def test_fr_fr__specialpunc
     assert_equal "Non&#8239;&#8264; Si&#8239;&#8252; Je ne te crois pas&#8239;&#8265; Je te jure&#8239;&#8252;", Jekyll::Microtypo.microtypo("Non ?! Si !! Je ne te crois pas !? Je te jure !!!", "fr_FR")
   end
 
   def test_fr_fr__nbsp
-    assert_equal "2001&nbsp;: l'odysée de l'espace", Jekyll::Microtypo.microtypo("2001 : l'odysée de l'espace", "fr_FR")
+    assert_equal "2001&nbsp;: Space Odyssey", Jekyll::Microtypo.microtypo("2001 : Space Odyssey", "fr_FR")
   end
 
   def test_fr_fr__currencies
@@ -71,7 +75,7 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_fr_fr__multiply
-    assert_equal "C'est un poster en 4&nbsp;&times;&nbsp;3.", Jekyll::Microtypo.microtypo("C'est un poster en 4x3.", "fr_FR")
+    assert_equal "Un poster en 4&nbsp;&times;&nbsp;3.", Jekyll::Microtypo.microtypo("Un poster en 4x3.", "fr_FR")
   end
 
   def test_en_us__removespaces

@@ -67,6 +67,9 @@ module Jekyll
               input.gsub!(%r!(&ldquo;|“|«)(\s|&nbsp;| )*!, "«&#8239;".freeze)
               input.gsub!(%r!(\s|&nbsp;| )*(&rdquo;|”|»)!, "&#8239;»".freeze)
 
+              # Apostrophe
+              input.gsub!(/([[:alpha:]])'([[:alpha:]])/, '\1’\2'.freeze)
+
               # Point median
 
               if settings["median"] == true
