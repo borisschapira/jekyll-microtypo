@@ -12,7 +12,6 @@ Gem::Specification.new do |spec|
   spec.summary = "Jekyll plugin that improves microtypography"
   spec.name = "jekyll-microtypo"
   spec.license = "MIT"
-  spec.has_rdoc = false
   spec.require_paths = ["lib"]
   spec.description = spec.description = <<-DESC
     Jekyll plugin that improves microtypography
