@@ -115,6 +115,13 @@ module Jekyll
             # Elipsis
             input.gsub!('...', '&#8230;'.freeze)
 
+            # Special characters
+            input.gsub!(/\([c|C]\)/, '©'.freeze)
+            input.gsub!(/\([p|P]\)/, '℗'.freeze)
+            input.gsub!(/\([r|R]\)/, '®'.freeze)
+            input.gsub!(/\((tm|TM)\)/, '™'.freeze)
+            input.gsub!(/\+-/, '±'.freeze)
+
             array_response.push input
           end
         end

@@ -73,6 +73,10 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_fr_fr__specialpunc
+    assert_equal "© © ® ® ™ ™ ℗ ℗ ±", Jekyll::Microtypo.microtypo("(c) (C) (r) (R) (tm) (TM) (p) (P) +-", "fr_FR")
+  end
+
+  def test_fr_fr__copyright
     assert_equal "Non&#8239;&#8264; Si&#8239;&#8252; Je ne te crois pas&#8239;&#8265; Je te jure&#8239;&#8252;", Jekyll::Microtypo.microtypo("Non ?! Si !! Je ne te crois pas !? Je te jure !!!", "fr_FR")
   end
 

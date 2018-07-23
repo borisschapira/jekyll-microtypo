@@ -38,6 +38,7 @@ For the moment, `jekyll-microtypo` only sypports fr_FR and en_US.
 - Use of opening and closing single quotation marks
 - Removing unnecessary spaces between amount and currency
 - Replacement of "..." with "..."
+- Use of special characters like ©, ®, ™ or ℗ by typing the letter with parenthesis
 
 ### Installation
 
@@ -128,6 +129,7 @@ Pour le moment, `jekyll-microtypo` ne supporte que fr_FR et en_US.
 - Ajout d'une espace insécable après un tiret long
 - Remplacement du "x" par un "&times;" dans les multiplications
 - Remplacement de "..." par une vrai éllipse "..."
+- Utilisation de caractères spéciaux comme ©, ®, ™ ou ℗ en utilisant une lettre entourée de parenthèses.
 - **Si configuré** : masquage de la notation abbréviative à base de point médian pour les lecteurs d'écran 
 
 ### Installation
