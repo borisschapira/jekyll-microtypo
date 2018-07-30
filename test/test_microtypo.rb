@@ -19,7 +19,7 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_fr_fr__thin_nb_space
-    assert_equal "Hello&#8239;! 4&#8239;px, 5&#8239;%&#8239;?", Jekyll::Microtypo.microtypo("Hello ! 4 px, 5 % ?", "fr_FR")
+    assert_equal "Hello&#8239;! 4&nbsp;px, 5&nbsp;%&#8239;?", Jekyll::Microtypo.microtypo("Hello ! 4 px, 5 % ?", "fr_FR")
   end
 
   def test_fr_fr__median_point_plural_nosetting
@@ -90,6 +90,10 @@ class MicrotypoTest < Minitest::Test
 
   def test_fr_fr__multiply
     assert_equal "Un poster en 4&nbsp;&times;&nbsp;3.", Jekyll::Microtypo.microtypo("Un poster en 4x3.", "fr_FR")
+  end
+
+  def test_fr_fr__units
+    assert_equal "Cet image pèse 4&nbsp;Ko une fois compressée", Jekyll::Microtypo.microtypo("Cet image pèse 4 Ko une fois compressée", "fr_FR")
   end
 
   def test_en_us__removespaces

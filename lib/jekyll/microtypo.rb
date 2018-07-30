@@ -77,9 +77,14 @@ module Jekyll
               input.gsub!(/(\s)+\!\!\!([^\w]|$)/, '&#8239;&#8252;\2'.freeze)
               input.gsub!(/(\s)+\!\!([^\w]|$)/, '&#8239;&#8252;\2'.freeze)
 
-              # Thin non-breaking space before '%', ';', '!', '?', 'px'
-              input.gsub!(/(\s)+(\d+)(\s)?(px|%)(\s|.)/, '\1\2&#8239;\4\5'.freeze)
-              input.gsub!(/ (%|;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
+              # Times
+              input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
+
+              # Non-breaking space before '%' and unities (< 4 letters)…
+              input.gsub!(/(\s)+(\d+)(\s)?([[:alpha:]]|%)/, '\1\2&nbsp;\4\5'.freeze)
+
+              # Thin non-breaking space before ;', '!', '?'
+              input.gsub!(/ (;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
 
               # non-breaking space
               input.gsub!(' :'.freeze, '&nbsp;:'.freeze)
@@ -89,9 +94,6 @@ module Jekyll
 
               # nbsp after middle dash (dialogs)
               input.gsub!(/(—|&mdash;)(\s)/, '\1&nbsp;'.freeze)
-
-              # Times
-              input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
 
             elsif locale == 'en_US'
 
