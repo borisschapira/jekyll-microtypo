@@ -96,6 +96,10 @@ class MicrotypoTest < Minitest::Test
     assert_equal "Cet image pèse 4&nbsp;Ko une fois compressée", Jekyll::Microtypo.microtypo("Cet image pèse 4 Ko une fois compressée", "fr_FR")
   end
 
+  def test_fr_fr__units_antitest
+    assert_equal "Le qualificateur 480w signale une image de 480&nbsp;pixels de large.", Jekyll::Microtypo.microtypo("Le qualificateur 480w signale une image de 480 pixels de large.", "fr_FR")
+  end
+
   def test_en_us__removespaces
     assert_equal "So: what are you thinking? Either you’re in at 100% or you’re out.", Jekyll::Microtypo.microtypo("So : what are you thinking ? Either you're in at 100 % or you're out.", "en_US")
   end

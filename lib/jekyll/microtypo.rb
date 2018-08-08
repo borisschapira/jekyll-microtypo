@@ -80,8 +80,8 @@ module Jekyll
               # Times
               input.gsub!(/(\s)+(\d+)(\s)*x(\s)*(?=\d)/, '\1\2&nbsp;&times;&nbsp;\5'.freeze)
 
-              # Non-breaking space before '%' and unities (< 4 letters)…
-              input.gsub!(/(\s)+(\d+)(\s)?([[:alpha:]]|%)/, '\1\2&nbsp;\4\5'.freeze)
+              # Non-breaking space before '%' and units (< 4 letters)…
+              input.gsub!(/(\s)+(\d+)(\s)+([[:alpha:]]|%)/, '\1\2&nbsp;\4\5'.freeze)
 
               # Thin non-breaking space before ;', '!', '?'
               input.gsub!(/ (;|\!|\?)([^\w!]|$)/, '&#8239;\1\2'.freeze)
