@@ -51,6 +51,14 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_fr_fr__ordinal
+    assert_equal "a15642e", Jekyll::Microtypo.microtypo("a15642e", "fr_FR")
+  end
+
+  def test_fr_fr__ordinal_bug_nhoizey_1
+    assert_equal "https://nicolas-hoizey.com/assets/components/footer-c73885d83bce23c897e4cb9831e0733eedcf64c3d6655782b3a898b53e15831e.css", Jekyll::Microtypo.microtypo("https://nicolas-hoizey.com/assets/components/footer-c73885d83bce23c897e4cb9831e0733eedcf64c3d6655782b3a898b53e15831e.css", "fr_FR")
+  end
+
+  def test_fr_fr__ordinal_bug_nhoizey_2
     assert_equal "Si je double le 2<sup>ème</sup>, je deviens 1<sup>er</sup>.", Jekyll::Microtypo.microtypo("Si je double le 2ème, je deviens 1er.", "fr_FR")
   end
 

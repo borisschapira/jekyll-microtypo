@@ -56,7 +56,7 @@ module Jekyll
             if locale == 'fr_FR'
 
               # Ordinals
-              input.gsub!(/(\d)(e|è)(r|me)?([\s.,])/, '\1<sup>\2\3</sup>\4'.freeze)
+              input.gsub!(/(\s)(\d)+(e|è)(r|me)?([\s.,])/, '\1\2<sup>\3\4</sup>\5'.freeze)
 
               # Num
               input.gsub!(/n°\s*(\d)/, 'n<sup>o</sup>&#8239;\1'.freeze)
