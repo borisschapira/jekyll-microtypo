@@ -15,9 +15,9 @@
     - [Ignore code sections](#ignore-code-sections)
   - [Français](#fran%C3%A7ais)
     - [Corrections fr_FR](#corrections-frfr)
-    - [Installation](#installation)
+    - [Installation](#installation-1)
     - [Utilisation générique](#utilisation-g%C3%A9n%C3%A9rique)
-    - [Configuration](#configuration)
+    - [Configuration](#configuration-1)
     - [Ignorer des portions de code](#ignorer-des-portions-de-code)
 
 ## English
@@ -120,7 +120,7 @@ Pour le moment, `jekyll-microtypo` ne supporte que fr_FR et en_US.
 
 - Remplacement des ordinnaux "1er, 2e" par "1<sup>er</sup>, 2<sup>e</sup>"
 - Remplacement de "n°3" par "n<sup>o</sup>&#8239;3"
-- Utilisation des guillemets à la français
+- Utilisation des guillemets à la française
 - Utilisation des guillemets simples ouvrants et fermants
 - Remplacement des pontuations spéciales "?!", "!?", "!!" par les signes adaptés "&#8264;", "&#8265;", "&#8252;"
 - Ajout d'une espace insécable ou fine insécable devant les signes de ponctuation qui le nécessitent
@@ -128,7 +128,7 @@ Pour le moment, `jekyll-microtypo` ne supporte que fr_FR et en_US.
 - Ajout d'une espace insécable avant le montant et les signes "€" ou "$"
 - Ajout d'une espace insécable après un tiret long
 - Remplacement du "x" par un "&times;" dans les multiplications
-- Remplacement de "..." par une vrai éllipse "..."
+- Remplacement de trois points par une vraie éllipse "..."
 - Utilisation de caractères spéciaux comme ©, ®, ™ ou ℗ en utilisant une lettre entourée de parenthèses.
 - **Si configuré** : masquage de la notation abbréviative à base de point médian pour les lecteurs d'écran 
 
