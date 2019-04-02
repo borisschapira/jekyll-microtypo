@@ -66,6 +66,12 @@ class MicrotypoTest < Minitest::Test
     assert_equal "On dit «&#8239;en Avignon&#8239;», pas «&#8239;à Avignon&#8239;». Ah, comme dans «&#8239;en Carmélie&#8239;» alors.", Jekyll::Microtypo.microtypo("On dit &ldquo;en Avignon&rdquo;, pas “à Avignon”. Ah, comme dans «&nbsp;en Carmélie » alors.", "fr_FR")
   end
 
+  def test_fr_fr__frenchquotes_links
+    assert_equal "«&#8239;<a href=\"#\">Œuvre</a>&#8239;», Autrice", Jekyll::Microtypo.microtypo("&ldquo;<a href=\"#\">Œuvre</a>&rdquo;, Autrice", "fr_FR")
+
+    assert_equal "«&#8239;<a href=\"#\">Livre</a>&#8239;», Auteur", Jekyll::Microtypo.microtypo("”<a href=\"#\">Livre</a>”, Auteur", "fr_FR")
+  end
+
   def test_fr_fr__single_quotes
     # test when microtypo.median = false
     assert_equal "Il compta jusqu’à trois ‘Missisipi’ puis dit&nbsp;: «&#8239;Tu devrais ‘danser', maintenant&#8239;».", Jekyll::Microtypo.microtypo("Il compta jusqu'à trois 'Missisipi' puis dit : “Tu devrais 'danser', maintenant”.", "fr_FR")

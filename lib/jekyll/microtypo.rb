@@ -62,8 +62,9 @@ module Jekyll
               input.gsub!(/n°\s*(\d)/, 'n<sup>o</sup>&#8239;\1'.freeze)
 
               # French Guillemets
-              input.gsub!(/(&ldquo;|“|«)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
-              input.gsub!(/(\s|&nbsp;| )*(&rdquo;|”|»)/, '&#8239;»'.freeze)
+              input.gsub!(/(&rdquo;|”|»)<a /, '«&#8239;<a '.freeze)
+              input.gsub!(/(&ldquo;|“|«)(?!&#8239;)(\s|&nbsp;| )*/, '«&#8239;'.freeze)
+              input.gsub!(/(\s|&nbsp;| )*(?!&#8239;)(&rdquo;|”|»)/, '&#8239;»'.freeze)
 
               # Point median
 
