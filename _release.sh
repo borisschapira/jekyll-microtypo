@@ -10,4 +10,4 @@ fi
 
 # gem build jekyll-microtypo.gemspec
 
-gem bump --version "$release_type" --tag --release
+bump "$release_type" --tag
