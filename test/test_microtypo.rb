@@ -13,9 +13,25 @@ class MicrotypoTest < Minitest::Test
     assert_equal "Avant Hey! Après", Jekyll::Microtypo.microtypo("Avant <!-- nomicrotypo -->Hey!<!-- endnomicrotypo --> Après")
   end
 
-  def test_all__pre_script_nofix
-    assert_equal "A!<pre>B !</pre> C!<script>D !</script> E!", Jekyll::Microtypo.microtypo("A !<pre>B !</pre> C !<script>D !</script> E !")
-    assert_equal "A&#8239;!<pre>B !</pre> C&#8239;!<script>D !</script> E&#8239;!", Jekyll::Microtypo.microtypo("A !<pre>B !</pre> C !<script>D !</script> E !", "fr_FR")
+  def test_all__style
+    assert_equal "Before <style>margin: 0 0 calc(0.9rem + 0.5vw);</style> After", Jekyll::Microtypo.microtypo("Before <style>margin: 0 0 calc(0.9rem + 0.5vw);</style> After")
+  end
+
+  def test_all__script
+    assert_equal "Before <script>const test = 'foo' != 'bar'</script> After", Jekyll::Microtypo.microtypo("Before <script>const test = 'foo' != 'bar'</script> After")
+  end
+
+  def test_all__pre
+    assert_equal "Before <pre>const test = 'foo' != 'bar'</pre> After", Jekyll::Microtypo.microtypo("Before <pre>const test = 'foo' != 'bar'</pre> After")
+  end
+
+  def test_all__code
+    assert_equal "Before <code>const test = 'foo' != 'bar'</code> After", Jekyll::Microtypo.microtypo("Before <code>const test = 'foo' != 'bar'</code> After")
+  end
+
+  def test_all__pre_script_code_nofix
+    assert_equal "A!<pre>B !</pre> C!<script>D !</script> E! <code>F !</code> Test", Jekyll::Microtypo.microtypo("A !<pre>B !</pre> C !<script>D !</script> E ! <code>F !</code> Test")
+    assert_equal "A&#8239;!<pre>B !</pre> C&#8239;!<script>D !</script> E&#8239;! <code>F !</code> Test", Jekyll::Microtypo.microtypo("A !<pre>B !</pre> C !<script>D !</script> E ! <code>F !</code> Test", "fr_FR")
   end
 
   def test_fr_fr__thin_nb_space
