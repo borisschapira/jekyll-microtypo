@@ -4,6 +4,34 @@ module Jekyll
   module Microtypo
     @@settings = []
 
+    # Example:
+    #   {{ content | microtypo: "fr_FR" }}
+    def microtypo(input, locale = nil, settings = {})
+      if settings.none?
+        settings = the_settings
+      end
+      settings["median"] ||= false
+
+      locale ||= "en_US"
+
+      array_response = []
+
+      array_exclude = [
+        ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
+        ["<pre", "</pre>", true],
+        ["<style", "</style>", true],
+        ["<script", "</script>", true],
+        ["<code", "</code>", true],
+      ]
+
+      recursive_parser(array_exclude, array_response, input, locale, settings)
+
+      # Clean empty lines
+      array_response.join.gsub(%r!\A\s*\n$!, "")
+    end
+
+    private
+
     def the_settings
       if @@settings.none?
         @@settings = Jekyll.configuration({})["microtypo"] || {}
@@ -112,32 +140,6 @@ module Jekyll
       input.gsub!(%r!\+-!, "±")
 
       array_response.push input
-    end
-
-    # Example:
-    #   {{ content | microtypo: "fr_FR" }}
-    def microtypo(input, locale = nil, settings = {})
-      if settings.none?
-        settings = the_settings
-      end
-      settings["median"] ||= false
-
-      locale ||= "en_US"
-
-      array_response = []
-
-      array_exclude = [
-        ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
-        ["<pre", "</pre>", true],
-        ["<style", "</style>", true],
-        ["<script", "</script>", true],
-        ["<code", "</code>", true],
-      ]
-
-      recursive_parser(array_exclude, array_response, input, locale, settings)
-
-      # Clean empty lines
-      array_response.join.gsub(%r!\A\s*\n$!, "")
     end
   end
 end
