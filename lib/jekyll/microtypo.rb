@@ -2,18 +2,16 @@
 
 module Jekyll
   module Microtypo
-    @@settings = []
+
+    def self.settings(config)
+      @settings ||= {}
+      @settings[config.hash] ||= config["microtypo"] || {}
+    end
 
     # Example:
     #   {{ content | microtypo: "fr_FR" }}
-    def microtypo(input, locale = nil, settings = {})
-      if settings.none?
-        settings = the_settings
-      end
-      settings["median"] ||= false
-
-      locale ||= "en_US"
-
+    def microtypo(input, locale = "en_US")
+      settings = Microtypo.settings(@context.registers[:site].config)
       array_response = []
 
       array_exclude = [
@@ -31,13 +29,6 @@ module Jekyll
     end
 
     private
-
-    def the_settings
-      if @@settings.none?
-        @@settings = Jekyll.configuration({})["microtypo"] || {}
-      end
-      @@settings
-    end
 
     def recursive_parser(array_exclude, array_response, input, locale, settings)
       if array_exclude.empty?
@@ -76,7 +67,7 @@ module Jekyll
 
       # Point median
 
-      if settings["median"] == true
+      if settings["median"]
         input.gsub!(%r!(\p{L}+)(·\p{L}+)((·)(\p{L}+))?!, '\1<span aria-hidden="true">\2\4</span>\5')
       end
 
