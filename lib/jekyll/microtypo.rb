@@ -2,6 +2,14 @@
 
 module Jekyll
   module Microtypo
+    QUEUE = [
+      ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
+      ["<pre", "</pre>", true],
+      ["<style", "</style>", true],
+      ["<script", "</script>", true],
+      ["<code", "</code>", true],
+    ].freeze
+    private_constant :QUEUE
 
     def self.settings(config)
       @settings ||= {}
@@ -11,49 +19,45 @@ module Jekyll
     # Example:
     #   {{ content | microtypo: "fr_FR" }}
     def microtypo(input, locale = "en_US")
-      settings = Microtypo.settings(@context.registers[:site].config)
-      array_response = []
+      bucket = []
 
-      array_exclude = [
-        ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
-        ["<pre", "</pre>", true],
-        ["<style", "</style>", true],
-        ["<script", "</script>", true],
-        ["<code", "</code>", true],
-      ]
-
-      recursive_parser(array_exclude, array_response, input, locale, settings)
+      recursive_parser(input, locale, bucket, QUEUE.length)
 
       # Clean empty lines
-      array_response.join.gsub(%r!\A\s*\n$!, "")
+      bucket.join.tap do |result|
+        result.gsub!(%r!\A\s*\n$!, "")
+      end
     end
 
     private
 
-    def recursive_parser(array_exclude, array_response, input, locale, settings)
-      if array_exclude.empty?
-        fix_microtypo(array_response, input, locale, settings)
-      else
-        to_exclude = array_exclude.pop
-        array = input.to_s.split(to_exclude[0])
-        array.each do |input_item|
-          end_item_array = input_item.to_s.split(to_exclude[1])
-          if end_item_array.size == 2
-            if !to_exclude[2]
-              array_response.push(end_item_array.first)
-            else
-              array_response.push(to_exclude[0])
-              array_response.push(end_item_array.first)
-              array_response.push(to_exclude[1])
-            end
+    def recursive_parser(input, locale, bucket, index)
+      input = input.to_s
+      return fix_microtypo(input, locale, bucket) if index.zero?
+
+      index -= 1
+      head, tail, flag = QUEUE[index]
+
+      input.split(head).each do |item|
+        item = item.to_s
+
+        if item.include?(tail)
+          end_items = item.split(tail)
+
+          if flag
+            bucket << head << end_items[0] << tail
+          else
+            bucket << end_items[0]
           end
-          input_item = end_item_array.last
-          recursive_parser(array_exclude, array_response, input_item, locale, settings)
+
+          item = end_items.last
         end
+
+        recursive_parser(item, locale, bucket, index)
       end
     end
 
-    def fix_microtypo_fr(_array_response, input, settings)
+    def fix_microtypo_fr(input)
       # Ordinals
       input.gsub!(%r!(\s)(\d)+(e|è)(r|me)?([\s.,])!, '\1\2<sup>\3\4</sup>\5')
 
@@ -65,8 +69,9 @@ module Jekyll
       input.gsub!(%r/(&ldquo;|“|«)(?!&#8239;)(\s|&nbsp;| )*/, "«&#8239;")
       input.gsub!(%r/(\s|&nbsp;| )*(?!&#8239;)(&rdquo;|”|»)/, "&#8239;»")
 
-      # Point median
+      settings = Microtypo.settings(@context.registers[:site].config)
 
+      # Point median
       if settings["median"]
         input.gsub!(%r!(\p{L}+)(·\p{L}+)((·)(\p{L}+))?!, '\1<span aria-hidden="true">\2\4</span>\5')
       end
@@ -96,7 +101,7 @@ module Jekyll
       input.gsub!(%r!(—|&mdash;)(\s)!, '\1&nbsp;')
     end
 
-    def fix_microtypo_us(_array_response, input, _settings)
+    def fix_microtypo_us(input)
       # Remove useless spaces
       input.gsub!(%r/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2')
 
@@ -104,11 +109,11 @@ module Jekyll
       input.gsub!(%r!($|€)\s*(\d+)!, '\1\2')
     end
 
-    def fix_microtypo(array_response, input, locale, settings)
+    def fix_microtypo(input, locale, bucket)
       if locale == "fr_FR"
-        fix_microtypo_fr(array_response, input, settings)
+        fix_microtypo_fr(input)
       elsif locale == "en_US"
-        fix_microtypo_us(array_response, input, settings)
+        fix_microtypo_us(input)
       end
 
       # single quotes
@@ -124,13 +129,13 @@ module Jekyll
       input.gsub!("...", "&#8230;")
 
       # Special characters
-      input.gsub!(%r!\([c|C]\)!, "©")
-      input.gsub!(%r!\([p|P]\)!, "℗")
-      input.gsub!(%r!\([r|R]\)!, "®")
+      input.gsub!(%r!\([cC]\)!, "©")
+      input.gsub!(%r!\([pP]\)!, "℗")
+      input.gsub!(%r!\([rR]\)!, "®")
       input.gsub!(%r!\((tm|TM)\)!, "™")
       input.gsub!(%r!\+-!, "±")
 
-      array_response.push input
+      bucket << input
     end
   end
 end
