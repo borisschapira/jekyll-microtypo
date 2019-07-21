@@ -33,10 +33,14 @@ module Jekyll
 
     def recursive_parser(input, locale, bucket, index)
       input = input.to_s
-      return fix_microtypo(input, locale, bucket) if index.zero?
+      return fix_microtypo(+input, locale, bucket) if index.zero?
 
       index -= 1
       head, tail, flag = QUEUE[index]
+
+      unless input.include?(head) && input.include?(tail)
+        return recursive_parser(input, locale, bucket, index)
+      end
 
       input.split(head).each do |item|
         item = item.to_s
