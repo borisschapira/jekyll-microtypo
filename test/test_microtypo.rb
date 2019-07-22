@@ -152,4 +152,72 @@ class MicrotypoTest < Minitest::Test
   def test_en_us__currencies
     assert_equal "$599, so €599", FilterMock.new.microtypo("$599, so € 599", "en_US")
   end
+
+  def test_fr_fr__real_page
+    source = <<~TEXT
+
+    <!DOCTYPE html>
+    <html lang="fr">
+      <head>
+        <!-- nomicrotypo -->
+        <meta charset="utf-8" />
+        <title>
+          Test d'une page
+        </title>
+        <!-- endnomicrotypo -->
+
+        <script>
+          document.body.innerHTML+= "Test d'une page";
+        </script>
+    
+      </head>
+    
+      <body>
+        <p>
+          Test d'une page avec du code ! Enfin plutôt, du <code>code !</code>
+        </p>
+        <pre><code>&lt;script&gt;
+   document.body.innerHTML+= &quot;Test d'une page&quot;;
+&lt;/script&gt;</code></pre>
+        <p>
+          “Fin”. <!-- nomicrotypo -->”That's all folks!”<!-- endnomicrotypo -->
+        </p>
+      </body>
+    </html>
+    TEXT
+
+    target = <<~TEXT
+
+    <!DOCTYPE html>
+    <html lang="fr">
+      <head>
+        
+        <meta charset="utf-8" />
+        <title>
+          Test d'une page
+        </title>
+        
+
+        <script>
+          document.body.innerHTML+= "Test d'une page";
+        </script>
+    
+      </head>
+    
+      <body>
+        <p>
+          Test d’une page avec du code&#8239;! Enfin plutôt, du <code>code !</code>
+        </p>
+        <pre><code>&lt;script&gt;
+   document.body.innerHTML+= &quot;Test d'une page&quot;;
+&lt;/script&gt;</code></pre>
+        <p>
+          «&#8239;Fin&#8239;». ”That's all folks!”
+        </p>
+      </body>
+    </html>
+    TEXT
+
+    assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
+  end
 end
