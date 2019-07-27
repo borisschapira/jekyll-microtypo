@@ -33,27 +33,46 @@ module Jekyll
 
     def recursive_parser(input, locale, bucket, index)
       input = input.to_s
+      
+      # prefix = " " + (" " * 3 * (QUEUE.size-index))
+      # p prefix + 'Recursive_parser for ' + input unless index.zero?
+      # p prefix + '     Fix microtypo for ' + input if index.zero?
+      # p prefix + '     and place it in the bucket' if index.zero?
       return fix_microtypo(+input, locale, bucket) if index.zero?
 
       index -= 1
       head, tail, flag = QUEUE[index]
 
-      unless input.include?(head) && input.include?(tail)
+      indexHead = input.index(head)
+      indexTail = input.index(tail)
+
+      if indexHead.nil? || indexTail.nil? || indexHead > indexTail
+        # p prefix + input
+        # p prefix + 'doest not contain '+head+' then '+tail
         return recursive_parser(input, locale, bucket, index)
       end
 
+      # p prefix + input
+      # p prefix + 'contains '+head+' and '+tail
+      # p prefix + 'cuts the input in parts around '+ head
       input.split(head).each do |item|
         item = item.to_s
 
+        # p prefix + '-----part----'
+        # p prefix + item
+
         if item.include?(tail)
+          # p prefix + 'contains '+tail
           end_items = item.split(tail)
 
+          # p prefix + end_items.to_s
           if flag
             bucket << head << end_items[0] << tail
           else
             bucket << end_items[0]
           end
 
+          # p prefix + bucket.to_s
           item = end_items.last
         end
 
