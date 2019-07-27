@@ -21,7 +21,7 @@ module Jekyll
     def microtypo(input, locale = "en_US")
       bucket = []
 
-      recursive_parser(input, locale, bucket, QUEUE.length)
+      recursive_parser(input, locale, bucket, QUEUE.length, true)
 
       # Clean empty lines
       bucket.join.tap do |result|
@@ -31,14 +31,20 @@ module Jekyll
 
     private
 
-    def recursive_parser(input, locale, bucket, index)
+    def recursive_parser(input, locale, bucket, index, fixMicrotypo)
       input = input.to_s
       
       # prefix = " " + (" " * 3 * (QUEUE.size-index))
       # p prefix + 'Recursive_parser for ' + input unless index.zero?
       # p prefix + '     Fix microtypo for ' + input if index.zero?
       # p prefix + '     and place it in the bucket' if index.zero?
-      return fix_microtypo(+input, locale, bucket) if index.zero?
+      if index.zero?
+        if fixMicrotypo
+          return fix_microtypo(+input, locale, bucket)
+        else
+          return bucket << input
+        end
+      end
 
       index -= 1
       head, tail, flag = QUEUE[index]
@@ -49,7 +55,7 @@ module Jekyll
       if indexHead.nil? || indexTail.nil? || indexHead > indexTail
         # p prefix + input
         # p prefix + 'doest not contain '+head+' then '+tail
-        return recursive_parser(input, locale, bucket, index)
+        return recursive_parser(input, locale, bucket, index, fixMicrotypo)
       end
 
       # p prefix + input
@@ -70,13 +76,14 @@ module Jekyll
             bucket << head << end_items[0] << tail
           else
             bucket << end_items[0]
+            fixMicrotypo = false
           end
 
           # p prefix + bucket.to_s
           item = end_items.last
         end
 
-        recursive_parser(item, locale, bucket, index)
+        recursive_parser(item, locale, bucket, index, fixMicrotypo)
       end
     end
 

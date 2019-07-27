@@ -232,4 +232,22 @@ class MicrotypoTest < Minitest::Test
 
     assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
   end
+
+  def test_all__pre_bis
+    source = <<~TEXT
+    <!-- nomicrotypo -->
+    <link rel="preload" as="style" href='/assets/styles/critical.css' data-proofer-ignore="">
+    <link rel="preload" as="style" href="/assets/styles/critical.css" data-proofer-ignore="">
+    <!-- endnomicrotypo -->
+    TEXT
+
+    target = <<~TEXT
+
+    <link rel="preload" as="style" href='/assets/styles/critical.css' data-proofer-ignore="">
+    <link rel="preload" as="style" href="/assets/styles/critical.css" data-proofer-ignore="">
+    
+    TEXT
+
+    assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
+  end
 end
