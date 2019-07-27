@@ -220,4 +220,18 @@ class MicrotypoTest < Minitest::Test
 
     assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
   end
+
+  def test_all__pre_bis
+    source = <<~TEXT
+    <pre class="highlight"><code>line 1 of code</code></pre>
+    <pre class="highlight"><code>line 2 of code</code></pre>
+    TEXT
+
+    target = <<~TEXT
+    <pre class="highlight"><code>line 1 of code</code></pre>
+    <pre class="highlight"><code>line 2 of code</code></pre>
+    TEXT
+
+    assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
+  end
 end
