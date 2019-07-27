@@ -223,13 +223,11 @@ class MicrotypoTest < Minitest::Test
 
   def test_all__pre_bis
     source = <<~TEXT
-    <pre class="highlight"><code>line 1 of code</code></pre>
-    <pre class="highlight"><code>line 2 of code</code></pre>
+    <pre><code>A</code></pre><pre><code>B</code></pre>
     TEXT
 
     target = <<~TEXT
-    <pre class="highlight"><code>line 1 of code</code></pre>
-    <pre class="highlight"><code>line 2 of code</code></pre>
+    <pre><code>A</code></pre><pre><code>B</code></pre>
     TEXT
 
     assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
