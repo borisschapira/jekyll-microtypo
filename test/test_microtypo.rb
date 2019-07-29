@@ -208,4 +208,11 @@ class MicrotypoTest < Minitest::Test
 
     assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
   end
+
+  def test_all__multiple_exclusions
+    source = "<script>Aujourd'hui</script><script>Aujourd'hui</script>"
+    target = "<script>Aujourd'hui</script><script>Aujourd'hui</script>"
+
+    assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
+  end
 end

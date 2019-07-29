@@ -9,7 +9,10 @@ module Jekyll
       ["<code", "</code>", true],
       ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
     ].freeze
+    DEBUG = false
+
     private_constant :QUEUE
+    private_constant :DEBUG
 
     def self.settings(config)
       @settings ||= {}
@@ -34,11 +37,12 @@ module Jekyll
     def recursive_parser(input, locale, bucket, index)
       input = input.to_s
       
-      # prefix = " " + (" " * 3 * (QUEUE.size-index))
-      # p prefix + 'Recursive_parser for ' + input unless index.zero?
-      # p prefix + '     Fix microtypo for ' + input if index.zero?
-      # p prefix + '     and place it in the bucket' if index.zero?
+      prefix = " " + (" " * 3 * (QUEUE.size-index))
+      p prefix + '     Fix microtypo for ' + input if DEBUG && index.zero? && DEBUG
+      p prefix + '     and place it in the bucket' if DEBUG && index.zero?
       return fix_microtypo(+input, locale, bucket) if index.zero?
+      
+      p prefix + 'Recursive_parser for ' + input if DEBUG
 
       index -= 1
       head, tail, flag = QUEUE[index]
@@ -47,36 +51,41 @@ module Jekyll
       indexTail = input.index(tail)
 
       if indexHead.nil? || indexTail.nil? || indexHead > indexTail
-        # p prefix + input
-        # p prefix + 'doest not contain '+head+' then '+tail
+        p prefix + input if DEBUG
+        p prefix + 'doest not contain '+head+' then '+tail if DEBUG
         return recursive_parser(input, locale, bucket, index)
       end
 
-      # p prefix + input
-      # p prefix + 'contains '+head+' and '+tail
-      # p prefix + 'cuts the input in parts around '+ head
+      p prefix + input if DEBUG
+      p prefix + 'contains '+head+' then '+tail if DEBUG
+
+      p prefix + 'cuts the input in parts around '+ head if DEBUG
       input.split(head).each do |item|
         item = item.to_s
 
-        # p prefix + '-----part----'
-        # p prefix + item
+        p prefix + '-----part----' if DEBUG
+        p prefix + item if DEBUG
 
         if item.include?(tail)
-          # p prefix + 'contains '+tail
+          p prefix + 'contains '+tail if DEBUG
           end_items = item.split(tail)
 
-          # p prefix + end_items.to_s
+          p prefix + end_items.to_s if DEBUG
           if flag
             bucket << head << end_items[0] << tail
           else
             bucket << end_items[0]
           end
 
-          # p prefix + bucket.to_s
-          item = end_items.last
+          p prefix + bucket.to_s if DEBUG
+          if(end_items.length >= 2)
+            item = end_items.last
+            index += 1
+            recursive_parser(item, locale, bucket, index)
+          end
+        else
+          recursive_parser(item, locale, bucket, index)
         end
-
-        recursive_parser(item, locale, bucket, index)
       end
     end
 
