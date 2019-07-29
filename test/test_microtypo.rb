@@ -153,70 +153,10 @@ class MicrotypoTest < Minitest::Test
     assert_equal "$599, so €599", FilterMock.new.microtypo("$599, so € 599", "en_US")
   end
 
-  def test_fr_fr__real_page
-    source = <<~TEXT
+  def test_fr_fr__fix_after_endmicrotypo
+    source = "<!-- nomicrotypo -->Aujourd'hui sur <!-- endnomicrotypo -->l'ile."
 
-    <!DOCTYPE html>
-    <html lang="fr">
-      <head>
-        <!-- nomicrotypo -->
-        <meta charset="utf-8" />
-        <title>
-          Test d'une page
-        </title>
-        <!-- endnomicrotypo -->
-
-        <script>
-          document.body.innerHTML+= "Test d'une page";
-        </script>
-    
-      </head>
-    
-      <body>
-        <p>
-          Test d'une page avec du code ! Enfin plutôt, du <code>code !</code>
-        </p>
-        <pre><code>&lt;script&gt;
-   document.body.innerHTML+= &quot;Test d'une page&quot;;
-&lt;/script&gt;</code></pre>
-        <p>
-          “Fin”. <!-- nomicrotypo -->”That's all folks!”<!-- endnomicrotypo -->
-        </p>
-      </body>
-    </html>
-    TEXT
-
-    target = <<~TEXT
-
-    <!DOCTYPE html>
-    <html lang="fr">
-      <head>
-        
-        <meta charset="utf-8" />
-        <title>
-          Test d'une page
-        </title>
-        
-
-        <script>
-          document.body.innerHTML+= "Test d'une page";
-        </script>
-    
-      </head>
-    
-      <body>
-        <p>
-          Test d’une page avec du code&#8239;! Enfin plutôt, du <code>code !</code>
-        </p>
-        <pre><code>&lt;script&gt;
-   document.body.innerHTML+= &quot;Test d'une page&quot;;
-&lt;/script&gt;</code></pre>
-        <p>
-          «&#8239;Fin&#8239;». ”That's all folks!”
-        </p>
-      </body>
-    </html>
-    TEXT
+    target = "Aujourd'hui sur l’ile."
 
     assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
   end
@@ -245,6 +185,24 @@ class MicrotypoTest < Minitest::Test
 
     <link rel="preload" as="style" href='/assets/styles/critical.css' data-proofer-ignore="">
     <link rel="preload" as="style" href="/assets/styles/critical.css" data-proofer-ignore="">
+    
+    TEXT
+
+    assert_equal target, FilterMock.new.microtypo(source, "fr_FR")
+  end
+
+  def test_all__nomicrotypo_containing_script
+    source = <<~TEXT
+    <!-- nomicrotypo -->
+    <script>console.log("Hello Wordl");</script>
+    <link rel='preconnect dns-prefetch' href='https://res.cloudinary.com'>
+    <!-- endnomicrotypo -->
+    TEXT
+
+    target = <<~TEXT
+    
+    <script>console.log("Hello Wordl");</script>
+    <link rel='preconnect dns-prefetch' href='https://res.cloudinary.com'>
     
     TEXT
 

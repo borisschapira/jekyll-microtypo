@@ -3,11 +3,11 @@
 module Jekyll
   module Microtypo
     QUEUE = [
-      ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
       ["<pre", "</pre>", true],
       ["<style", "</style>", true],
       ["<script", "</script>", true],
       ["<code", "</code>", true],
+      ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
     ].freeze
     private_constant :QUEUE
 
@@ -21,7 +21,7 @@ module Jekyll
     def microtypo(input, locale = "en_US")
       bucket = []
 
-      recursive_parser(input, locale, bucket, QUEUE.length, true)
+      recursive_parser(input, locale, bucket, QUEUE.length)
 
       # Clean empty lines
       bucket.join.tap do |result|
@@ -31,20 +31,14 @@ module Jekyll
 
     private
 
-    def recursive_parser(input, locale, bucket, index, fixMicrotypo)
+    def recursive_parser(input, locale, bucket, index)
       input = input.to_s
       
       # prefix = " " + (" " * 3 * (QUEUE.size-index))
       # p prefix + 'Recursive_parser for ' + input unless index.zero?
       # p prefix + '     Fix microtypo for ' + input if index.zero?
       # p prefix + '     and place it in the bucket' if index.zero?
-      if index.zero?
-        if fixMicrotypo
-          return fix_microtypo(+input, locale, bucket)
-        else
-          return bucket << input
-        end
-      end
+      return fix_microtypo(+input, locale, bucket) if index.zero?
 
       index -= 1
       head, tail, flag = QUEUE[index]
@@ -55,7 +49,7 @@ module Jekyll
       if indexHead.nil? || indexTail.nil? || indexHead > indexTail
         # p prefix + input
         # p prefix + 'doest not contain '+head+' then '+tail
-        return recursive_parser(input, locale, bucket, index, fixMicrotypo)
+        return recursive_parser(input, locale, bucket, index)
       end
 
       # p prefix + input
@@ -76,14 +70,13 @@ module Jekyll
             bucket << head << end_items[0] << tail
           else
             bucket << end_items[0]
-            fixMicrotypo = false
           end
 
           # p prefix + bucket.to_s
           item = end_items.last
         end
 
-        recursive_parser(item, locale, bucket, index, fixMicrotypo)
+        recursive_parser(item, locale, bucket, index)
       end
     end
 
