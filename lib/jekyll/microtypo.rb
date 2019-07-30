@@ -80,8 +80,7 @@ module Jekyll
           p prefix + bucket.to_s if DEBUG
           if(end_items.length >= 2)
             item = end_items.last
-            index += 1
-            recursive_parser(item, locale, bucket, index)
+            recursive_parser(item, locale, bucket, index + 1)
           end
         else
           recursive_parser(item, locale, bucket, index)
