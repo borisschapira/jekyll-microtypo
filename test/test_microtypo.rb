@@ -82,6 +82,10 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_fr_fr__ordinal
+    assert_equal "pour la 150<sup>e</sup> fois", FilterMock.new.microtypo("pour la 150e fois", "fr_FR")
+  end
+
+  def test_fr_fr__ordinal_not
     assert_equal "a15642e", FilterMock.new.microtypo("a15642e", "fr_FR")
   end
 
