@@ -134,7 +134,7 @@ module Jekyll
 
     def fix_microtypo_us(input)
       # Ordinals
-      input.gsub!(%r!(\s)(\d+)(st|th)([\s.,\)])!, '\1\2<sup>\3</sup>\4')
+      input.gsub!(%r!(\s)(\d+)(st|th|rd|nd)([\s.,\)])!, '\1\2<sup>\3</sup>\4')
 
       # Remove useless spaces
       input.gsub!(%r/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2')

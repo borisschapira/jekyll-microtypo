@@ -90,7 +90,7 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_en_us__ordinal
-    assert_equal "for the 150<sup>th</sup> time (ok, the 1<sup>st</sup>)", FilterMock.new.microtypo("for the 150th time (ok, the 1st)", "en_US")
+    assert_equal "for the 150<sup>th</sup> time (or at least, the 1<sup>st</sup>, 2<sup>nd</sup> or 3<sup>rd</sup>)", FilterMock.new.microtypo("for the 150th time (or at least, the 1st, 2nd or 3rd)", "en_US")
   end
 
   def test_en_us__ordinal_not
