@@ -90,7 +90,7 @@ module Jekyll
 
     def fix_microtypo_fr(input)
       # Ordinals
-      input.gsub!(%r!(\s)(\d+)(e|è)(r|me)?([\s.,])!, '\1\2<sup>\3\4</sup>\5')
+      input.gsub!(%r!(\s)(\d+)(e|è)(r|me|re)?([\s.,\)])!, '\1\2<sup>\3\4</sup>\5')
 
       # Num
       input.gsub!(%r!n°\s*(\d)!, 'n<sup>o</sup>&#8239;\1')
@@ -133,6 +133,9 @@ module Jekyll
     end
 
     def fix_microtypo_us(input)
+      # Ordinals
+      input.gsub!(%r!(\s)(\d+)(st|th)([\s.,\)])!, '\1\2<sup>\3</sup>\4')
+
       # Remove useless spaces
       input.gsub!(%r/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2')
 
