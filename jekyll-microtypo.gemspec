@@ -24,8 +24,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "minitest", "~> 5.8", ">= 5.8.4"
   spec.add_development_dependency "rake", "~> 12.0"
-  spec.add_development_dependency "rubocop"
-  spec.add_development_dependency 'base64'
-  spec.add_development_dependency 'bigdecimal'
-  spec.add_development_dependency 'csv'
+  spec.add_development_dependency "rubocop", "~> 1.68.0"
+  spec.add_development_dependency 'base64', "~> 0.2.0"
+  spec.add_development_dependency 'bigdecimal', "~> 3.1.8"
+  spec.add_development_dependency 'csv', "~> 3.3.0"
 end
