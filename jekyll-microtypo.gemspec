@@ -17,13 +17,15 @@ Gem::Specification.new do |spec|
     Jekyll plugin that improves microtypography
   DESC
 
-  spec.required_ruby_version = ">= 2.4.0"
-  spec.rubygems_version = "2.2.2"
+  spec.required_ruby_version = ">= 3.3.0"
+  spec.rubygems_version = "3.3.0"
 
   spec.add_runtime_dependency "jekyll", ">= 3.0", "< 5.0"
-
   spec.add_development_dependency "bundler", "~> 2.1"
   spec.add_development_dependency "minitest", "~> 5.8", ">= 5.8.4"
   spec.add_development_dependency "rake", "~> 12.0"
-  spec.add_development_dependency "rubocop", "~> 0.51.0"
+  spec.add_development_dependency "rubocop"
+  spec.add_development_dependency 'base64'
+  spec.add_development_dependency 'bigdecimal'
+  spec.add_development_dependency 'csv'
 end
