@@ -108,16 +108,16 @@ module Jekyll
       end
 
       # Special punctuation
-      input.gsub!(%r!(\s)+\?\!([^\w]|$)!, '&#8239;&#8264;\2')
-      input.gsub!(%r!(\s)+\!\?([^\w]|$)!, '&#8239;&#8265;\2')
-      input.gsub!(%r!(\s)+\!\!\!([^\w]|$)!, '&#8239;&#8252;\2')
-      input.gsub!(%r!(\s)+\!\!([^\w]|$)!, '&#8239;&#8252;\2')
+      input.gsub!(%r!\s+\?\!([^\w]|$)!, '&#8239;&#8264;\1')
+      input.gsub!(%r!\s+\!\?([^\w]|$)!, '&#8239;&#8265;\1')
+      input.gsub!(%r!\s+\!\!\!([^\w]|$)!, '&#8239;&#8252;\1')
+      input.gsub!(%r!\s+\!\!([^\w]|$)!, '&#8239;&#8252;\1')
 
       # Times
-      input.gsub!(%r!(\s)+(\d+)(\s)*x(\s)*(?=\d)!, '\1\2&nbsp;&times;&nbsp;\5')
+      input.gsub!(%r!\s+(\d+)\s*x\s*(?=\d)!, ' \1&nbsp;&times;&nbsp;')
 
       # Non-breaking space before '%' and units (< 4 letters)
-      input.gsub!(%r!(\s)+(\d+)(\s)+([[:alpha:]]|%)!, '\1\2&nbsp;\4\5')
+      input.gsub!(%r!\s+(\d+)\s+([[:alpha:]]|%)!, ' \1&nbsp;\2')
 
       # Thin non-breaking space before ;', '!', '?'
       input.gsub!(%r/ (;|\!|\?)([^\w!]|$)/, '&#8239;\1\2')
@@ -129,7 +129,7 @@ module Jekyll
       input.gsub!(%r!(\d+)\s*($|€)!, '\1&nbsp;\2')
 
       # nbsp after middle dash (dialogs)
-      input.gsub!(%r!(—|&mdash;)(\s)!, '\1&nbsp;')
+      input.gsub!(%r!(—|&mdash;)\s!, '\1&nbsp;')
     end
 
     def fix_microtypo_us(input)
