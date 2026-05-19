@@ -9,10 +9,8 @@ module Jekyll
       ["<code", "</code>", true],
       ["<!-- nomicrotypo -->", "<!-- endnomicrotypo -->", false],
     ].freeze
-    DEBUG = false
 
     private_constant :QUEUE
-    private_constant :DEBUG
 
     def self.settings(config)
       @settings ||= {}
@@ -34,15 +32,18 @@ module Jekyll
 
     private
 
+    def debug?
+      ENV["JEKYLL_MICROTYPO_DEBUG"] == "1"
+    end
+
+    def debug
+      return unless debug? && block_given?
+      p yield
+    end
+
     def recursive_parser(input, locale, bucket, index)
       input = input.to_s
-      
-      prefix = " " + (" " * 3 * (QUEUE.size-index))
-      p prefix + '     Fix microtypo for ' + input if DEBUG && index.zero? && DEBUG
-      p prefix + '     and place it in the bucket' if DEBUG && index.zero?
       return fix_microtypo(+input, locale, bucket) if index.zero?
-      
-      p prefix + 'Recursive_parser for ' + input if DEBUG
 
       index -= 1
       head, tail, flag = QUEUE[index]
@@ -51,34 +52,27 @@ module Jekyll
       indexTail = input.index(tail)
 
       if indexHead.nil? || indexTail.nil? || indexHead > indexTail
-        p prefix + input if DEBUG
-        p prefix + 'doest not contain '+head+' then '+tail if DEBUG
+        debug { "#{input.inspect} does not contain #{head} then #{tail}" }
         return recursive_parser(input, locale, bucket, index)
       end
 
-      p prefix + input if DEBUG
-      p prefix + 'contains '+head+' then '+tail if DEBUG
+      debug { "#{input.inspect} contains #{head} then #{tail}" }
 
-      p prefix + 'cuts the input in parts around '+ head if DEBUG
       input.split(head).each do |item|
         item = item.to_s
 
-        p prefix + '-----part----' if DEBUG
-        p prefix + item if DEBUG
-
         if item.include?(tail)
-          p prefix + 'contains '+tail if DEBUG
+          debug { "contains #{tail}" }
           end_items = item.split(tail)
 
-          p prefix + end_items.to_s if DEBUG
           if flag
             bucket << head << end_items[0] << tail
           else
             bucket << end_items[0]
           end
 
-          p prefix + bucket.to_s if DEBUG
-          if(end_items.length >= 2)
+          debug { bucket.inspect }
+          if end_items.length >= 2
             item = end_items.last
             recursive_parser(item, locale, bucket, index + 1)
           end
