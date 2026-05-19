@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jekyll-microtypo (2.0.0)
+    jekyll-microtypo (2.0.2)
       jekyll (>= 3.0, < 5.0)
 
 GEM
