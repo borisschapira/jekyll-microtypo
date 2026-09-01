@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.rubygems_version = "3.3.0"
 
   spec.add_runtime_dependency "jekyll", ">= 3.0", "< 5.0"
-  spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "bundler", "~> 4.0"
   spec.add_development_dependency "minitest", "~> 5.8", ">= 5.8.4"
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rubocop", "~> 1.68.0"
