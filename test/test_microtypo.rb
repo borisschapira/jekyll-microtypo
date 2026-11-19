@@ -82,6 +82,21 @@ class MicrotypoTest < Minitest::Test
     assert_equal "Elle porte le n<sup>o</sup>&#8239;3.", @mock.microtypo("Elle porte le n°3.", "fr_FR")
   end
 
+  def test_fr_fr__thousands_separator
+    assert_equal "1000, 12&#8239;345 et 1&#8239;234&#8239;567.", @mock.microtypo("1000, 12345 et 1234567.", "fr_FR")
+  end
+
+  def test_fr_fr__does_not_format_years
+    assert_equal "C’était le 19 mai 2026.", @mock.microtypo("C'était le 19 mai 2026.", "fr_FR")
+    assert_equal "En 1943, la suite.", @mock.microtypo("En 1943, la suite.", "fr_FR")
+  end
+
+  def test_fr_fr__does_not_format_numbers_in_identifiers
+    input = "fzishsFFD3921812829DNQUF ref_123456_ref"
+
+    assert_equal input, @mock.microtypo(input, "fr_FR")
+  end
+
   def test_fr_fr__elipsis
     assert_equal "Moi ça va&#8230;", @mock.microtypo("Moi ça va...", "fr_FR")
   end
@@ -90,12 +105,30 @@ class MicrotypoTest < Minitest::Test
     assert_equal "pour la 150<sup>e</sup> fois (ok, la 1<sup>ere</sup>)", @mock.microtypo("pour la 150e fois (ok, la 1ere)", "fr_FR")
   end
 
+  def test_fr_fr__ordinal_at_text_boundaries
+    assert_equal "1<sup>er</sup> puis 150<sup>e</sup>", @mock.microtypo("1er puis 150e", "fr_FR")
+  end
+
   def test_fr_fr__ordinal_not
     assert_equal "a15642th", @mock.microtypo("a15642th", "en_US")
   end
 
   def test_en_us__ordinal
     assert_equal "for the 150<sup>th</sup> time (or at least, the 1<sup>st</sup>, 2<sup>nd</sup> or 3<sup>rd</sup>)", @mock.microtypo("for the 150th time (or at least, the 1st, 2nd or 3rd)", "en_US")
+  end
+
+  def test_en_us__ordinal_at_text_boundaries
+    assert_equal "1<sup>st</sup> and 150<sup>th</sup>", @mock.microtypo("1st and 150th", "en_US")
+  end
+
+  def test_en_us__thousands_separator
+    assert_equal "1000, 12,345 and 1,234,567.", @mock.microtypo("1000, 12345 and 1234567.", "en_US")
+  end
+
+  def test_en_us__does_not_format_numbers_in_identifiers
+    input = "fzishsFFD3921812829DNQUF ref_123456_ref"
+
+    assert_equal input, @mock.microtypo(input, "en_US")
   end
 
   def test_en_us__ordinal_not
@@ -112,6 +145,12 @@ class MicrotypoTest < Minitest::Test
 
   def test_fr_fr__frenchquotes
     assert_equal "On dit «&#8239;en Avignon&#8239;», pas «&#8239;à Avignon&#8239;». Ah, comme dans «&#8239;en Carmélie&#8239;» alors.", @mock.microtypo("On dit &ldquo;en Avignon&rdquo;, pas “à Avignon”. Ah, comme dans «&nbsp;en Carmélie » alors.", "fr_FR")
+  end
+
+  def test_fr_fr__frenchquotes_are_idempotent
+    input = "«&#8239;Bonjour&#8239;»"
+
+    assert_equal input, @mock.microtypo(input, "fr_FR")
   end
 
   def test_fr_fr__frenchquotes_links
@@ -147,7 +186,7 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_fr_fr__currencies
-    assert_equal "599$, donc 599&nbsp;€", @mock.microtypo("599$, donc 599 €", "fr_FR")
+    assert_equal "599$, donc 599&nbsp;€, puis 599", @mock.microtypo("599$, donc 599 €, puis 599", "fr_FR")
   end
 
   def test_fr_fr__multiply
@@ -156,6 +195,10 @@ class MicrotypoTest < Minitest::Test
 
   def test_fr_fr__units
     assert_equal "Cet image pèse 4&nbsp;Ko une fois compressée", @mock.microtypo("Cet image pèse 4 Ko une fois compressée", "fr_FR")
+  end
+
+  def test_fr_fr__does_not_format_non_unit_words
+    assert_equal "Il compte 4 minutes et 4 pommes.", @mock.microtypo("Il compte 4 minutes et 4 pommes.", "fr_FR")
   end
 
   def test_fr_fr__units_antitest
@@ -167,7 +210,7 @@ class MicrotypoTest < Minitest::Test
   end
 
   def test_en_us__currencies
-    assert_equal "$599, so €599", @mock.microtypo("$599, so € 599", "en_US")
+    assert_equal "$599, so €599", @mock.microtypo("$ 599, so € 599", "en_US")
   end
 
   def test_fr_fr__fix_after_endmicrotypo

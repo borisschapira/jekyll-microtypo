@@ -82,9 +82,21 @@ module Jekyll
       end
     end
 
+    # Groups digit sequences of five or more; four-digit values such as years are left unchanged.
+    def format_thousands(input, separator)
+      input.gsub!(%r~(?<!&#)(?<![\p{L}\d_.,])\d{5,}(?![\p{L}\d_]|\s*:)~) do |number|
+        number.gsub(%r~(?<=\d)(?=(?:\d{3})+$)~) { separator }
+      end
+    end
+
+    # Applies French punctuation and number formatting
     def fix_microtypo_fr(input)
+
+      # Thousand separators for numbers with > 4 digits
+      format_thousands(input, "&#8239;")
+
       # Ordinals
-      input.gsub!(%r!(\s)(\d+)(e|è)(r|me|re)?([\s.,\)])!, '\1\2<sup>\3\4</sup>\5')
+      input.gsub!(%r!(^|\s)(\d+)(e|è)(r|me|re)?([\s.,\)]|$)!, '\1\2<sup>\3\4</sup>\5')
 
       # Num
       input.gsub!(%r!n°\s*(\d)!, 'n<sup>o</sup>&#8239;\1')
@@ -92,7 +104,7 @@ module Jekyll
       # French Guillemets
       input.gsub!(%r!(&rdquo;|”|»)<a !, "«&#8239;<a ")
       input.gsub!(%r/(&ldquo;|“|«)(?!&#8239;)(\s|&nbsp;| )*/, "«&#8239;")
-      input.gsub!(%r/(\s|&nbsp;| )*(?!&#8239;)(&rdquo;|”|»)/, "&#8239;»")
+      input.gsub!(%r/(\s|&nbsp;| )*(?<!&#8239;)(&rdquo;|”|»)/, "&#8239;»")
 
       settings = Microtypo.settings(@context.registers[:site].config)
 
@@ -110,8 +122,8 @@ module Jekyll
       # Times
       input.gsub!(%r!\s+(\d+)\s*x\s*(?=\d)!, ' \1&nbsp;&times;&nbsp;')
 
-      # Non-breaking space before '%' and units (< 4 letters)
-      input.gsub!(%r!\s+(\d+)\s+([[:alpha:]]|%)!, ' \1&nbsp;\2')
+      # Non-breaking space before '%' and recognized units
+      input.gsub!(%r~\s+(\d+)\s+(%|pixels?|kHz|MHz|µm|nm|km|cm|mm|dm|kg|mg|min|ms|mA|kV|kW|MW|mL|cL|Ko|Mo|Go|To|°C|°F|Hz|px|m|g|t|s|h|A|V|W|L|o)(?![\p{L}\d])~, ' \1&nbsp;\2')
 
       # Thin non-breaking space before ;', '!', '?'
       input.gsub!(%r/ (;|\!|\?)([^\w!]|$)/, '&#8239;\1\2')
@@ -120,23 +132,29 @@ module Jekyll
       input.gsub!(" :", "&nbsp;:")
 
       # Currencies
-      input.gsub!(%r!(\d+)\s*($|€)!, '\1&nbsp;\2')
+      input.gsub!(%r!(\d+)\s*€!, '\1&nbsp;€')
 
       # nbsp after middle dash (dialogs)
       input.gsub!(%r!(—|&mdash;)\s!, '\1&nbsp;')
     end
 
+    # Applies US English punctuation and number formatting
     def fix_microtypo_us(input)
+
+      # Thousand separators for numbers with > 4 digits
+      format_thousands(input, ",")
+
       # Ordinals
-      input.gsub!(%r!(\s)(\d+)(st|th|rd|nd)([\s.,\)])!, '\1\2<sup>\3</sup>\4')
+      input.gsub!(%r!(^|\s)(\d+)(st|th|rd|nd)([\s.,\)]|$)!, '\1\2<sup>\3</sup>\4')
 
       # Remove useless spaces
       input.gsub!(%r/ (:|%|;|\!|\?)([^\w!]|$)/, '\1\2')
 
       # Currencies
-      input.gsub!(%r!($|€)\s*(\d+)!, '\1\2')
+      input.gsub!(%r!(\$|€)\s*(\d+)!, '\1\2')
     end
 
+    # Applies locale-specific fixes first, then shared quote, apostrophe, and character replacements.
     def fix_microtypo(input, locale, bucket)
       if locale == "fr_FR"
         fix_microtypo_fr(input)
